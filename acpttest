@@ -1,0 +1,5 @@
+nosetests -a attrib="acpt" -v
+
+#python -c "import mcba; mcba.test('acpt', verbose=True)"
+
+echo BTW, Use nosetests -a attrib="quick" --with-doctest -v for unit testing

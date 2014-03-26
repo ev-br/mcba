@@ -1,0 +1,4 @@
+nosetests -a attrib="quick" -v --all-modules --with-doctest -w ./mcba
+#nosetests -a attrib="quick" -v --with-doctest -w ./mcba/tests
+ 
+echo 'BTW, Use "attrib="acpt" for regr testing (recalc cnf @ tests/acpt_DBs)'

@@ -1,0 +1,8 @@
+# remove *pyc & *pyo files
+find . -name "*.pyc" -delete
+find . -name "*.pyo" -delete
+find . -name "*~" -delete
+
+#find . -name "*.pyc" | xargs rm
+#find . -name "*.pyo" | xargs rm
+
