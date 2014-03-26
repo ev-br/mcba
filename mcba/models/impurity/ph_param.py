@@ -4,7 +4,7 @@ from math import pi
 from collections import namedtuple
 
 # http://ceasarjames.wordpress.com/2012/03/19/how-to-use-default-arguments-with-namedtuple/
-class Par( namedtuple("Par", "N L V m_q") ):
+class Par(namedtuple("Par", "N L V m_q")):
     def __new__(cls, N=3, L=11, V=1., m_q=1):
         return super(Par, cls).__new__(cls, N, L, V, m_q)
 
@@ -35,26 +35,22 @@ def E_in(par):
     """
     return E_FS(par) + initial_q(par)**2 + 2.*par.V*par.N/par.L
 
-
-
 def Lieb_Wu_a(par):
     """This enters the BA equations (cd BA.py & matrix_elements.py)"""
     return 4./(par.V* par.L)
 
-
 def check_par(par):
-    """N positive and less than L; L positive; V repulsive."""
-    return par.N > 0 and par.L > 0 and par.N < par.L and par.V > 0
-
+    """N positive and less than L; L positive; V not necessarily repulsive."""
+    return par.N > 0 and par.L > 0 and par.N < par.L
 
 def par_id_str(par):
-    """Is used by the DB.      
+    """Is used by the DB.
     >>> par_id_str(Par())
     'N3L11q1V1.00'
     """
-    return "".join(["N{0}L{1}q{2}V{3:.2f}".format(par.N, par.L, 
+    return "".join(["N{0}L{1}q{2}V{3:.2f}".format(par.N, par.L,
                                                   par.m_q, par.V)])
-    
+
 def long_print(par):
     s = ["Par: N = {0},  L = {1},  ".format(par.N, par.L),
          "V = {0:.2f},  ".format(par.V),
