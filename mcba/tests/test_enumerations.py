@@ -44,7 +44,7 @@ class TestGenSupport(object):
         for cnt, (x, s) in enumerate(en.gen_support(3, 0, None)):
             if x>7:
                 break
-        print x, cnt
+        print(x, cnt)
         assert cnt==12 and x==8 
 
 

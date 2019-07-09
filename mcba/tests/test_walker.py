@@ -139,7 +139,7 @@ class TestWalkerRestart(object):
         remove_file(self.mc_dict["db_fname"])
 
     def teardown(self):
-        print "teardown"
+        print("teardown")
         remove_file(self.mc_dict["db_fname"])
 
 
@@ -289,7 +289,7 @@ class TestWalkerSolverAcptDBs(object):
 
     
     def compare_all(self, fname):
-        print "reading in: ", fname
+        print("reading in: ", fname)
         handle, = db.get_handles(fname)
         par = db.get_param(handle)
 

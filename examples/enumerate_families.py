@@ -14,7 +14,7 @@ def main():
 
     import mcba.db as db
     for cnf in db.row_iterator(walker.db_handle):
-        print cnf["partition"], cnf["c"], cnf["FSfq"]    
+        print(cnf["partition"], cnf["c"], cnf["FSfq"])
 
 
 class EnumWalkerPatched(EnumWalker):

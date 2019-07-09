@@ -369,7 +369,7 @@ def verify_DB(handle, model, num, check_roots=True, atol=1e-10, rtol=1e-10):
             # select num rows from the DB
             dbsize = get_DBsize(handle)
             try:
-                indices = random.sample(xrange(dbsize), num)
+                indices = random.sample(range(dbsize), num)
                 it = (x for j, x in enumerate(it) if j in indices)
             except ValueError:
                 pass         # "random.sample: sample is larger than population"
