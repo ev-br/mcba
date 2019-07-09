@@ -1,5 +1,5 @@
 from __future__ import division, print_function, absolute_import
-from itertools import combinations, izip, chain, count
+from itertools import combinations, chain, count
 
 import numpy as np
 
@@ -133,10 +133,10 @@ def count_outwards(N, num=None):
     StopIteration
     """
     fs = fermi_sea(N)
-    counter = chain.from_iterable(izip(count(), (-z-1 for z in count())))
+    counter = chain.from_iterable(zip(count(), (-z-1 for z in count())))
     x, n = 0, 0
-    while n < num or num is None:
-        x = counter.next()
+    while num is None or n < num:
+        x = next(counter)
         if x not in fs:
             n += 1
             yield x
@@ -168,7 +168,8 @@ def gen_support(N, num_start, num_stop=None):
         support.append(x)
 
 
-def gen_particles(num_p, (x, support)): 
+def gen_particles(num_p, tpl): 
+    x, support = tpl
     if num_p < 2:
         raise RuntimeError("gen_particles w/ num_p=%s"%num_p)
     else:
@@ -181,7 +182,7 @@ def gen_partitions_1(model):
     N = model.par.N
     minn = model.par.m_q - N -1
     maxx = model.par.m_q + N
-    for p in xrange(minn, maxx + 1):
+    for p in range(minn, maxx + 1):
         if p not in fermi_sea(N):
             for fs_pairs in thread_holes([p], model):
                 yield p, fs_pairs
@@ -228,7 +229,7 @@ def gen_oneparametric(model, fs_pairs0):
     summ0 = -sum_deltas(fs_pairs0, model.par)
     maxx = summ0 
     minn = maxx - model.par.N-1
-    for p in xrange(minn, maxx+1):
+    for p in range(minn, maxx+1):
         fs_pairs = fsPairs(h=fs_pairs0.h, p=fs_pairs0.p+[p])
         if model.is_valid(fs_pairs):
             yield p, fs_pairs
@@ -341,7 +342,7 @@ class EnumWalker(BasicWalker):
 
     def do_step(self):
         """Round-robin over num_p-s."""
-        self.curr_limit, self.fs_pairs = self.generator.next()
+        self.curr_limit, self.fs_pairs = next(self.generator)
         
         # fs_pairs can still be invalid: e.g. q>k_F fsPairs([],[])
         if self.model.is_valid(self.fs_pairs):

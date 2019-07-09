@@ -18,8 +18,8 @@ class test_tab_parabola(object):
     attrib="quick"
 
     ntab = 50
-    xmin,xmax = 0., 5.
-    xx = np.array([xmin + (xmax-xmin)*j/ntab for j in xrange(ntab+1)])
+    xmin, xmax = 0., 5.
+    xx = np.array([xmin + (xmax-xmin)*j/ntab for j in range(ntab+1)])
     tab = PiecewiseCubic(xx, parab, d_parab, 
             f_above=fill_above, f_below=fill_below)
 
@@ -28,12 +28,11 @@ class test_tab_parabola(object):
         """own-tabulate a parabola."""
         ntab1 = 888*self.ntab
         xmin1, xmax1 = self.xmin, self.xmax
-        xt = np.array([ xmin1 + (xmax1-xmin1)*j/ntab1 for j in xrange(ntab1) ])
+        xt = np.array([ xmin1 + (xmax1-xmin1)*j/ntab1 for j in range(ntab1) ])
 
         yp = np.array([parab(x) for x in xt])
         yt = self.tab(xt)
 
-        #print yt-yp
         np.testing.assert_allclose(yt, yp, atol=1e-10, rtol=1e-10)
 
 

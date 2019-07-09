@@ -88,7 +88,7 @@ class AbstractWalker(object):
         """Step-by-step evolution of the walk."""
         while not self.is_work_done():
             self.sweeps += 1
-            for self.step in xrange(self.steps_per_sweep):
+            for self.step in range(self.steps_per_sweep):
                 self.do_step()
                 yield self
 
@@ -141,7 +141,7 @@ class BasicWalker(AbstractWalker):
 
     def sum_overlaps(self):
         if self.keep_rcache:
-            sumr = self.model.sum_overlaps(self.rcache.itervalues())
+            sumr = self.model.sum_overlaps(self.rcache.values())
         else:
             # get it from disk
             sumr = self.model.sum_overlaps(db.row_iterator(self.db_handle))
@@ -151,7 +151,7 @@ class BasicWalker(AbstractWalker):
 
     def sum_P(self):
         if self.keep_rcache:
-            P = self.model.av_momt(self.rcache.itervalues())
+            P = self.model.av_momt(self.rcache.values())
         else:
             # get it from disk
             P = self.model.av_momt(db.row_iterator(self.db_handle))

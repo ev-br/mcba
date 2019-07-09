@@ -127,7 +127,7 @@ class TestBASolverTabulation(object):
     
     def test_finer_grid(self):
         """Test tabulation: recalc @ a finer grid, compare."""
-        print ""
+        print("")
         _vB = self.solver._Bethe_system
         grid = self.solver.cc
         a = Lieb_Wu_a(self.par)
@@ -140,7 +140,6 @@ class TestBASolverTabulation(object):
             xt1 = _vB(c, buckets)
             xb1 = array( [brentq(BA.BA_eq, 1e-15, pi-1e-15, args=(c, n, a)) 
                     for n in buckets] )
-#            print xt1-xb1
             assert_allclose(xt1, xb1, atol=1e-8, rtol=1e-8)
 
 
@@ -184,9 +183,9 @@ class test_BA_system_solver(object):
 
     def test_magic_values(self):
         """BA system: magic values. (loop over solvers)"""
-        print ""
+        print("")
         for solver in self.solvers:
-            print "solver = ", solver
+            print("solver = ", solver)
             self.magic_values(solver)
 
 

@@ -77,7 +77,7 @@ def bare_thetas(roots, par):
 
 
 def fq_Pup_fq(roots, par):
-    """The non-trivial part of Eq. (4.40):
+    r"""The non-trivial part of Eq. (4.40):
     the matrix element <f_q | P_\up | f_q> = q - ..., and 
     this function returns the ... from the rhs of (4.40).
     """

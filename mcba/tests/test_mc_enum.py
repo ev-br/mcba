@@ -40,7 +40,7 @@ class TestMCvsEnum(object):
         assert wsum > 0.995    # 'quick'
 
         # enumerate
-        print "enumerate........."
+        print("enumerate.........")
 
         dcache = en.direct_enumerate(par, -4, 5, verbose = False)
         dsum = model.sum_overlaps(dcache.itervalues())

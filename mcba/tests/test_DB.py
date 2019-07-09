@@ -88,7 +88,7 @@ class TestRoundTrip(object):
         cols = ["roots", "P", "FSfq", "c"]
         cache_back = {}
         for row in db.row_iterator(handle):
-            print "row_ = ", row["partition"]
+            print("row_ = ", row["partition"])
             cache_back[db.pre_hash(row["partition"])] =\
                 dict( (col, row[col]) for col in cols)
 

@@ -27,14 +27,14 @@ def pairwise(iterable):
     "s -> (s0,s1), (s1,s2), (s2, s3), ... (itertools recipes)"
     a, b = itertools.tee(iterable)
     next(b, None)
-    return itertools.izip(a, b)
+    return zip(a, b)
 
 
 def roundrobin(*iterables):
     "roundrobin('ABC', 'D', 'EF') --> A D E B F C  (itertools recipes)"
     # Recipe credited to George Sakkis
     pending = len(iterables)
-    nexts = itertools.cycle(iter(it).next for it in iterables)
+    nexts = itertools.cycle(iter(it).__next__ for it in iterables)
     while pending:
         try:
             for next in nexts:
@@ -106,7 +106,7 @@ def arr_from_dict(dct, datatype):
     >>> dct = {"a": 1, "b": 2, "c": 3}
     >>> dt = np.dtype( [("a", "float64"), ("b", "float64")] )
     >>> arr_from_dict(dct, dt)
-    array([(1.0, 2.0)], 
+    array([( 1.,  2.)],
           dtype=[('a', '<f8'), ('b', '<f8')])
 
     Notice that dct["c"] is left out since there's no such key in the datatype.
