@@ -35,7 +35,7 @@ class TestMCvsEnum(object):
         walker.walk()
         #wcache = db.load_full_cache(walker.db_handle)
         wcache = walker.rcache
-        wsum = model.sum_overlaps(wcache.itervalues())
+        wsum = model.sum_overlaps(wcache.values())
 
         assert wsum > 0.995    # 'quick'
 
@@ -43,7 +43,7 @@ class TestMCvsEnum(object):
         print("enumerate.........")
 
         dcache = en.direct_enumerate(par, -4, 5, verbose = False)
-        dsum = model.sum_overlaps(dcache.itervalues())
+        dsum = model.sum_overlaps(dcache.values())
         assert dsum > 0.995
 
         #intersection of caches must coincide
@@ -66,8 +66,8 @@ class TestMCvsEnumHeavy(object):
         walker.walk()
 
         wcache = walker.rcache
-        wsum = model.sum_overlaps(wcache.itervalues())
-        wP = model.av_momt(wcache.itervalues())
+        wsum = model.sum_overlaps(wcache.values())
+        wP = model.av_momt(wcache.values())
         assert wsum > 0.995
 
         #now run a direct enumeration
@@ -75,8 +75,8 @@ class TestMCvsEnumHeavy(object):
         en_walker.walk()
 
         dcache = en_walker.rcache
-        dsum = model.sum_overlaps(dcache.itervalues())
-        dP = model.av_momt(dcache.itervalues())
+        dsum = model.sum_overlaps(dcache.values())
+        dP = model.av_momt(dcache.values())
         assert dsum > 0.995
 
         #intersection of the caches must coincide

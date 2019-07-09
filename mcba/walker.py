@@ -158,12 +158,12 @@ class Walker(BasicWalker):
     def reset(self):
         """Restart the walker from a random cnf from the cache."""
         n = np.random.randint(self.num_cnf())
-        bk = self.lookup_cache.keys()
-        for _ in range(n):
-            next(bk)
-#        self.fs_pairs = from_prehash(next(bk))     # previous
-        self.fs_pairs = from_prehash(tuple(bk)) 
-
+#        bk = self.lookup_cache.keys()
+#        for _ in range(n-1):
+#            next(bk)
+#        self.fs_pairs = from_prehash(next(bk)) 
+        bk = sorted(self.lookup_cache)[n]
+        self.fs_pairs = from_prehash(bk)
 
 
     def printout(self):
