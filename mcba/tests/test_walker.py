@@ -146,12 +146,12 @@ class TestWalkerRestart(object):
     def test_restart(self):
         walker = Walker(self.model, **self.mc_dict)
         walker.walk()
-        sum_overl0 = self.model.sum_overlaps(walker.rcache.itervalues())
+        sum_overl0 = self.model.sum_overlaps(walker.rcache.values())
 
         mc_dict = hp.copydict(self.mc_dict, {"threshold": 0.9, "num_sweeps": 5})
         walker2 = Walker(self.model, **mc_dict)
         walker2.walk()
-        sum_overl1 = self.model.sum_overlaps(walker.rcache.itervalues())
+        sum_overl1 = self.model.sum_overlaps(walker.rcache.values())
         assert sum_overl1 >= sum_overl0
 
         #FIXME: keep_rcache=True & restarts should be a separate one

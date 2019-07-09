@@ -165,8 +165,8 @@ class TestCreatePersistent(object):
         with handle:
             with handle:
                 mesg = handle.execute("SELECT * from mcrun_log")
-                mesg.next()  # skip the first entry 
-                assert mesg.next()[1] == "fourty two"
+                next(mesg)  # skip the first entry 
+                assert next(mesg)[1] == "fourty two"
 
     @raises(sqlite3.DatabaseError)
     def test_emptyfile(self):
@@ -217,8 +217,8 @@ class TestCreateInMemory(object):
             with handle:
                 db._log_trans(handle,"fourty two", None)
                 mesg = handle.execute("SELECT * from mcrun_log")
-                mesg.next()  # skip the first entry 
-        assert mesg.next()[1] == "fourty two"
+                next(mesg)  # skip the first entry 
+        assert next(mesg)[1] == "fourty two"
 
     def test_row_iter(self):
         """In_memory: use row_iterator """
