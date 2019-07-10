@@ -88,6 +88,6 @@ class TestMCvsEnumHeavy(object):
         # sum rules & momenta must agree
 #        print "sum rule, sum momt = ", dsum - wsum, wP-dP
         assert abs(dsum - wsum) < 5e-3
-        assert abs(dP - wP) < 5e-4
+        assert abs(dP - wP) < 7e-4
 
 
