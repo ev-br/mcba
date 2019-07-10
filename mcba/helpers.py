@@ -106,8 +106,7 @@ def arr_from_dict(dct, datatype):
     >>> dct = {"a": 1, "b": 2, "c": 3}
     >>> dt = np.dtype( [("a", "float64"), ("b", "float64")] )
     >>> arr_from_dict(dct, dt)
-    array([( 1.,  2.)],
-          dtype=[('a', '<f8'), ('b', '<f8')])
+    array([(1., 2.)], dtype=[('a', '<f8'), ('b', '<f8')])
 
     Notice that dct["c"] is left out since there's no such key in the datatype.
     """
@@ -125,7 +124,7 @@ def arr_from_dictiter(it, datatype):
     >>> dt = np.dtype( [("a", "float64"), ("b", "float64")] )
     >>> xx = arr_from_dictiter(lst, dt)
     >>> xx["a"], xx["b"]
-    (array([ 1.,  4.]), array([ 2.,  5.]))
+    (array([1., 4.]), array([2., 5.]))
     """
     data = np.empty(1, dtype=datatype)
     for item in it: 

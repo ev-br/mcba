@@ -4,7 +4,7 @@ from mcba.enumerations import EnumWalker, gen_oneparametric
 
 
 def main():
-    par = Par(N=3, L=11, m_q=1)
+    par = Par(N=7, L=11, m_q=1)
     model = SingleImpurity(par)
 
     # Enumerate partitions with the 'hole' at the edge of the fermi surface
