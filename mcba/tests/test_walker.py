@@ -215,7 +215,7 @@ class TestWalkerLoadFullCache(object):
         walker = Walker(self.model, **self.mc_dict)
         walker.walk()
 
-        sum_rcache = self.model.sum_overlaps(walker.rcache.itervalues())
+        sum_rcache = self.model.sum_overlaps(walker.rcache.values())
         sum_db = self.model.sum_overlaps( db.row_iterator(walker.db_handle) )
 
         numpy.testing.assert_allclose(sum_db, sum_rcache)

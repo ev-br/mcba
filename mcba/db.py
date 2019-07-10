@@ -3,7 +3,8 @@ import sqlite3
 import datetime
 import os
 import zlib
-import numpy
+import io
+import numpy as np
 import warnings
 from collections import namedtuple
 
@@ -50,11 +51,28 @@ def convert_fs_pairs(s):
 >>> np.fromstring( np.array([42]).tostring() )
 array([  2.07507571e-322])
 """
-def adapt_ndarray(ndarr):
-    return buffer(zlib.compress(ndarr.tostring()))
+#def adapt_ndarray(ndarr):
+#    return buffer(zlib.compress(ndarr.tostring()))
 
-def convert_ndarray(string):
-    return numpy.fromstring(zlib.decompress(string))
+#def convert_ndarray(string):
+#    return numpy.fromstring(zlib.decompress(string))
+
+
+# from https://stackoverflow.com/questions/18621513/python-insert-numpy-array-into-sqlite3-database
+def adapt_ndarray(arr):
+    """
+    http://stackoverflow.com/a/31312102/190597 (SoulNibbler)
+    """
+    out = io.BytesIO()
+    np.save(out, arr)
+    out.seek(0)
+    return sqlite3.Binary(out.read())
+
+def convert_ndarray(text):
+    out = io.BytesIO(text)
+    out.seek(0)
+    return np.load(out)
+
 
 
 class DBHandle(object):
@@ -82,7 +100,7 @@ class DBHandle(object):
         sqlite3.register_adapter(list, adapt_list)
         sqlite3.register_converter("list_of_ints", convert_buckets)
 
-        sqlite3.register_adapter(numpy.ndarray, adapt_ndarray)
+        sqlite3.register_adapter(np.ndarray, adapt_ndarray)
         sqlite3.register_converter("ndarray", convert_ndarray)
 
         if not self.is_persistent:
