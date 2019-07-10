@@ -215,7 +215,7 @@ class TestWalkerLoadFullCache(object):
         walker = Walker(self.model, **self.mc_dict)
         walker.walk()
 
-        sum_rcache = self.model.sum_overlaps(walker.rcache.itervalues())
+        sum_rcache = self.model.sum_overlaps(walker.rcache.values())
         sum_db = self.model.sum_overlaps( db.row_iterator(walker.db_handle) )
 
         numpy.testing.assert_allclose(sum_db, sum_rcache)
@@ -273,8 +273,9 @@ class TestWalkerSolverAcptDBs(object):
               "baseN135mq67.sqlite",
              ]
 
-    mc_dict = {"db_fname" : None}
-
+    mc_dict = {"db_fname" : None,
+               'db_np_sql_mode': 'v1',   # use legacy mode for reading the DBs
+              }
 
     def test_compare_base_DBs(self):
 
@@ -290,12 +291,12 @@ class TestWalkerSolverAcptDBs(object):
     
     def compare_all(self, fname):
         print("reading in: ", fname)
-        handle, = db.get_handles(fname)
+        handle, = db.get_handles(fname, np_sql_mode='v1')
         par = db.get_param(handle)
 
         model = SingleImpurity(par)
         walker = Walker(model, **self.mc_dict)
-        
+
         # verify all entries
         db.verify_DB(handle, model, num=None, atol=1e-8, rtol=1e-8)     
 

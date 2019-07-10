@@ -3,7 +3,8 @@ import sqlite3
 import datetime
 import os
 import zlib
-import numpy
+import io
+import numpy as np
 import warnings
 from collections import namedtuple
 
@@ -54,7 +55,24 @@ def adapt_ndarray(ndarr):
     return buffer(zlib.compress(ndarr.tostring()))
 
 def convert_ndarray(string):
-    return numpy.fromstring(zlib.decompress(string))
+    return np.fromstring(zlib.decompress(string))
+
+
+# from https://stackoverflow.com/questions/18621513/python-insert-numpy-array-into-sqlite3-database
+def adapt_ndarray2(arr):
+    """
+    http://stackoverflow.com/a/31312102/190597 (SoulNibbler)
+    """
+    out = io.BytesIO()
+    np.save(out, arr)
+    out.seek(0)
+    return sqlite3.Binary(out.read())
+
+def convert_ndarray2(text):
+    out = io.BytesIO(text)
+    out.seek(0)
+    return np.load(out)
+
 
 
 class DBHandle(object):
@@ -68,12 +86,28 @@ class DBHandle(object):
             with db_handle:
                 setup_db(...)
                 dump_cache(...)
+
+    Parameters
+    ----------
+    fname : str
+        DB file name
+    np_sql_mode : str, optional
+        Adapter/converter mode for storing numpy arrays of roots in the DB.
+        Allowed values are "v1" for the legacy zlib/fromstring method, and
+        "v2" for the np.save based mode.
+
     """
-    def __init__(self, fname):
+    def __init__(self, fname, np_sql_mode=None):
         """If an in-memory DB, connect immediately. Otherwise, do nothing."""
         self.fname = fname
         self.is_persistent = (fname != ":memory:")
         self.count = 0    # number of _opens
+
+        if np_sql_mode is None:
+            np_sql_mode = "v2"
+        if np_sql_mode not in ["v2", "v1"]:
+            raise ValueError("Unknown np_sql_mode %s " % np_sql_mode)
+        self.np_sql_mode = np_sql_mode
 
         sqlite3.register_adapter(tuple, adapt_tuple)
         sqlite3.register_converter("tuple_of_ints", convert_fs_pairs)
@@ -82,8 +116,12 @@ class DBHandle(object):
         sqlite3.register_adapter(list, adapt_list)
         sqlite3.register_converter("list_of_ints", convert_buckets)
 
-        sqlite3.register_adapter(numpy.ndarray, adapt_ndarray)
-        sqlite3.register_converter("ndarray", convert_ndarray)
+        if np_sql_mode == "v2":
+            sqlite3.register_adapter(np.ndarray, adapt_ndarray2)
+            sqlite3.register_converter("ndarray", convert_ndarray2)
+        else:
+            sqlite3.register_adapter(np.ndarray, adapt_ndarray)
+            sqlite3.register_converter("ndarray", convert_ndarray)
 
         if not self.is_persistent:
             self.conn, self.count = self._open(self.fname)
@@ -133,8 +171,8 @@ class DBHandle(object):
 
 class DBHandleWithID(DBHandle):
     """DB handle + run id_str :-)."""
-    def __init__(self, fname, id_str=None, db_key=None):
-        super(DBHandleWithID, self).__init__(fname)
+    def __init__(self, fname, id_str=None, db_key=None, np_sql_mode=None):
+        super(DBHandleWithID, self).__init__(fname, np_sql_mode)
         self.id_str = id_str
         self.db_key = db_key
 
@@ -154,17 +192,17 @@ class DBHandleWithID(DBHandle):
 ########################## User-callables ####################################
 ##############################################################################
 
-def get_handles(fname):
+def get_handles(fname, np_sql_mode=None):
     """Given a fname, return the list of DB handles."""
     # if file does not exist, let the exception propagate (it's a failure anyway)
     conn = sqlite3.connect(fname)
-    handles = [DBHandleWithID(fname, id_str, db_key) for (id_str, db_key)
+    handles = [DBHandleWithID(fname, id_str, db_key, np_sql_mode=np_sql_mode) for (id_str, db_key)
             in conn.execute("SELECT id_str, db_key FROM mcrun_meta;")]
     conn.close()
     return handles
 
 
-def setup_db(model, db_fname, seed, prefix='mc'):
+def setup_db(model, db_fname, seed, prefix='mc', np_sql_mode=None):
     """Setup the DB and return the handle: if new, create one; if existing, 
     check compatibility.
     """
@@ -172,9 +210,9 @@ def setup_db(model, db_fname, seed, prefix='mc'):
     schema_tag = "foo"
 
     if db_fname is None:
-        handle = DBHandleWithID(":memory:", id_str)
+        handle = DBHandleWithID(":memory:", id_str, np_sql_mode=np_sql_mode)
     else:
-        handle = DBHandleWithID(db_fname, id_str)
+        handle = DBHandleWithID(db_fname, id_str, np_sql_mode=np_sql_mode)
 
     with handle:
         """if existing db, check that parameters are same
