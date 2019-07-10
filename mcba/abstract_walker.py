@@ -103,7 +103,8 @@ class BasicWalker(AbstractWalker):
     """Instantiates solvers, receives par, sets up the DB."""
     def __init__(self, model, keep_rcache=False, lower_cutoff=0, threshold=0.995,
                        db_fname=":memory:", db_prefix="mc", verbose_logg=True,
-                       store_roots=True, steps_per_sweep=None, **kwargs):
+                       store_roots=True, steps_per_sweep=None, db_np_sql_mode=None,
+                       **kwargs):
         super(BasicWalker, self).__init__(**kwargs)
 
         self.model = model
@@ -112,6 +113,9 @@ class BasicWalker(AbstractWalker):
         self.keep_rcache = keep_rcache
         self.threshold, self.lower_cutoff = threshold, lower_cutoff
 
+        if db_np_sql_mode is None:
+            db_np_sql_mode = "v2"
+
         if steps_per_sweep is None:
             self.steps_per_sweep = self.model.par.N +1
         else:
@@ -119,7 +123,7 @@ class BasicWalker(AbstractWalker):
 
         ################## Set up the DB & get the caches ######################
         self.db_handle, self.is_fresh = db.setup_db(self.model, self.db_fname, 
-                self.seed, prefix=self.db_prefix)
+                self.seed, prefix=self.db_prefix, np_sql_mode=db_np_sql_mode)
 
         self.rcache = {}
         if not self.is_fresh:

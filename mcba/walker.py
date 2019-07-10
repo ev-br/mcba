@@ -51,6 +51,9 @@ class Walker(BasicWalker):
            db_fname        : ":memory:" (default is an in-memory sqlite DB)
            db_prefix       : "mc" (used for the DB id string)
            store_roots     : True (if False, roots will not be saved to the DB)
+           db_np_sql_mode  : defines how to store the array or roots in the DB.
+                             "v1" is the legacy mode, based on zlib/fromstring
+                             "v2" is based on np.save
 
         MC updates furthermore, use these ones:
            low_en_range    : 5 if par.N>11 else 1 (cf CreAnn pair update) 
