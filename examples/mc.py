@@ -14,13 +14,13 @@ def main():
 
     # now get the results from disk and only print  
     # those with large enough weight:
-    print "\n***Largest weight partitions:"
+    print("\n***Largest weight partitions:")
 
     import mcba.db as db
     handle,  = db.get_handles('N3mc.sqlite')
     for cnf in db.row_iterator(handle, orderby="FSfq*FSfq"):
         if cnf["FSfq"]**2 > 0.005:
-            print  "%s:  <FS|f_q> = %s, P=%s"%(cnf["partition"], cnf["FSfq"], cnf["P"])
+            print("%s:  <FS|f_q> = %s, P=%s"%(cnf["partition"], cnf["FSfq"], cnf["P"]))
 
 
 ###################
