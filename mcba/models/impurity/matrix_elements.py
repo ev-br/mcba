@@ -25,7 +25,7 @@ Technicalities:
 """
 from __future__ import division, print_function, absolute_import
 import numpy as np
-import scipy as sc
+import scipy.linalg as linalg
 
 from .ph_param import Lieb_Wu_a, initial_q
 from .partitions import fermi_sea
@@ -63,16 +63,16 @@ def energy(roots, par):
     return summ(roots["roots"]**2)*4./par.L**2
 
 
-def deltas(roots, par):
+def deltas(roots):
     """ z_t = \pi*n_t + \delta_t
     MZ convention has an extra minus sign @ \delta.
     """
     return roots["roots"] - np.pi*roots["buckets"]
 
 
-def bare_thetas(roots, par):
+def bare_thetas(roots):
     """ \\theta_t = \sqrt{a} bare_theta_t, Eq. (S36)."""
-    return np.sin( -deltas(roots, par) )  # MZ convention
+    return np.sin( -deltas(roots) )  # MZ convention
 
 
 
@@ -91,7 +91,7 @@ def fq_Pup_fq(roots, par):
         return initial_q(par) / (par.N + 1)     # Matt's catch
 
     a = Lieb_Wu_a(par)
-    bth2 = bare_thetas(roots, par)**2
+    bth2 = bare_thetas(roots)**2
     bth2e = bth2 / (1. + a* bth2)
 
     num = summ(bth2e*roots["roots"])
@@ -112,7 +112,7 @@ def _Yfq2(roots, par):
         return 1./(1.+par.N)
 
     a = Lieb_Wu_a(par)
-    th = bare_thetas(roots, par)
+    th = bare_thetas(roots)
     th2 = th**2
     e = 1. + a * th2
     Y = summ(th2/e)  * np.prod(e)
@@ -139,7 +139,7 @@ def _detX(roots, basis_state, par):
             return 0.
 
     # Construct the matrix:
-    th = bare_thetas(roots, par)
+    th = bare_thetas(roots)
     Th = summ(th)
     assert not np.allclose(Th, 0.), \
             "Th ==0 @ _phi"
@@ -153,7 +153,7 @@ def _detX(roots, basis_state, par):
     
     X += ph[:, np.newaxis]    # make ph a column vector  
     X *= th1
-    det = sc.linalg.det(X, overwrite_a=True)
+    det = linalg.det(X, overwrite_a=True)
 
     """  # Above is equivalent to and is *way* faster then:
     X = np.empty([par.N,par.N])
@@ -188,7 +188,7 @@ def det_Cauchy(roots, basis_state, par):
     assert par.N+1 == len(roots["roots"]) == len(basis_state) +1
 
     # Construct the matrix:
-    th = bare_thetas(roots, par)
+    th = bare_thetas(roots)
     Th = summ(th)
     if np.allclose(Th, 0.):
         # is probably a 'singular' state, just return NaN and pretend to be done
@@ -201,7 +201,7 @@ def det_Cauchy(roots, basis_state, par):
     X = cauchy[:, :-1]
     th1 = th[:-1]
     X *= th1
-    det = sc.linalg.det(X, overwrite_a=True)
+    det = linalg.det(X, overwrite_a=True)
 
     return det
 
