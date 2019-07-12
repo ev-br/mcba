@@ -245,16 +245,18 @@ def _deriv(roots_p, roots, par):
     return np.prod(s[:-1]) * element * fac
 
 
-def _amp(roots_p, roots, par):
-    """
-    Return contribution to momentum of sea from roots_p and roots combination.
+def fPf(roots_p, roots, par):
+    r"""
+    Matrix element <f | P | f>, non-trivial part of (S56).
 
     Attempts to use SVD, if does not converge uses slower line-replacement
     method
 
+    FIXME: P_\up or P_\down? Need to be consistent w/ matrix_elements.
+
     """
-    FSfq_p, Y_p = roots_p['FSfq'], roots_p['Yfq']
-    FSfq, Y = roots['FSfq'], roots['Yfq']
+    Y_p = roots_p['Yfq']
+    Y = roots['Yfq']
 
     # Normalisation in Eqn (S56) - needs to be applied for off-diagonal
     # elements, normalisation already applied for diagonal elements.
@@ -280,5 +282,23 @@ def _amp(roots_p, roots, par):
             print(roots['partition'], '  ', roots['c'])
             matel = _deriv_where(roots_p, roots, par) * matel_norm
 
+    return matel
+
+
+
+def _amp(roots_p, roots, par):
+    """
+    Return contribution to momentum of sea from roots_p and roots combination.
+
+    Attempts to use SVD, if does not converge uses slower line-replacement
+    method
+
+    """
+    FSfq_p = roots_p['FSfq']
+    FSfq = roots['FSfq']
+
+    matel = fPf(roots_p, roots, par)
+
     return FSfq * FSfq_p * matel
+
 
