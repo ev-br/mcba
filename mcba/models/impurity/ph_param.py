@@ -29,11 +29,18 @@ def E_FS(par):
     """Total energy of a filled Fermi sea."""
     return par.N * E_F(par) /3.
 
-def E_in(par):
-    """In-state energy: FS + injected impurity + \delta-function coupling.
+def E_in(par, mM=1.):
+    r"""In-state energy: FS + injected impurity + \delta-function coupling.
     cf (2.12), (2.2)
+
+    `mM` is the ratio of the host mass `m` to the impurity mass `M`: The kinetic
+    energy of the impurity is
+    $$
+      \frac{p^2}{2M} = \frac{p^2}{2m} \frac{m}{M}
+    $$
+    and we use the units where $2m = 1$.
     """
-    return E_FS(par) + initial_q(par)**2 + 2.*par.V*par.N/par.L
+    return E_FS(par) + (initial_q(par)**2 * mM) + 2.*par.V*par.N/par.L
 
 
 
