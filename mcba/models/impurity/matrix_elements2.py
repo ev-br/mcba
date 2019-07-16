@@ -249,10 +249,10 @@ def fPf(roots_p, roots, par):
     r"""
     Matrix element <f | P | f>, non-trivial part of (S56).
 
+    This is, in fact, <f_p | P_\down | f_q > : the momentum of the IMPURITY.
+
     Attempts to use SVD, if does not converge uses slower line-replacement
     method
-
-    FIXME: P_\up or P_\down? Need to be consistent w/ matrix_elements.
 
     """
     Y_p = roots_p['Yfq']
