@@ -355,17 +355,18 @@ w/o ordering:  10 loops, best of 3: 1.47 sec per loop
 w/ ordering:   10 loops, best of 3: 4.17 sec per loop
 '''
 
+Par = namedtuple("Par", "N L V m_q")
+
 def get_param(handle):
     """Construct and return a Par() object from a DB handle.
     TODO: In fact, this returns a namedtuple with the fields.
     """
-    pseudopar = namedtuple("Par", "N L V m_q")
     
     with handle:
         assert handle.is_usable() and handle.is_key_ok()
         x = handle.execute("SELECT * FROM mcrun_meta WHERE id_str=?",
                  (handle.id_str,)).fetchone()
-    return pseudopar(N=x[2], L=x[1], V=x[3], m_q=x[4])
+    return Par(N=x[2], L=x[1], V=x[3], m_q=x[4])
 
 
 def get_db_key(handle):
