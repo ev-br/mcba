@@ -1,0 +1,16 @@
+######## editor temporary files
+*~
+
+######## compiled source
+*.a
+*.so
+*.pyc
+
+######## DBs
+*.db
+*.sqlite
+
+### mercurial 
+.hg
+
+build/

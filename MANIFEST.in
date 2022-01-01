@@ -1,0 +1,2 @@
+recursive-include mcba *py *sqlite
+include examples/*py
