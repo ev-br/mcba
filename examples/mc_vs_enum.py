@@ -18,9 +18,9 @@ def main():
     # now compare the results: rcaches are available
     def report(tag, model, first, second):
         diff = dict((pairs, first[pairs]) for pairs in first if pairs not in second )
-        print "\n", tag, len(diff)
-        print "\t sum overlaps = ", model.sum_overlaps(diff.itervalues())
-        print "\t momentum     = ", model.av_momt(diff.itervalues())
+        print("\n", tag, len(diff))
+        print("\t sum overlaps = ", model.sum_overlaps(diff.values()))
+        print("\t momentum     = ", model.av_momt(diff.values()))
 
     report("picked by MC, missed by enumeration:", model, walker.rcache, en_walker.rcache)
     report("picked by enumeration, missed by MC:", model, en_walker.rcache, walker.rcache)
